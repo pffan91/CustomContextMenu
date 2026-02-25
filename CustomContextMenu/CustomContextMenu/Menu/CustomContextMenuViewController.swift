@@ -70,13 +70,12 @@ final class CustomContextMenuViewController: UIViewController {
     private func setupView() {
         view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
 
-        containerView.backgroundColor = UIColor(red: 0.17, green: 0.17, blue: 0.18, alpha: 1.0)
+        containerView.backgroundColor = UIColor(red: 0.14, green: 0.14, blue: 0.14, alpha: 1.00)
         containerView.layer.cornerRadius = 12
         containerView.layer.shadowColor = UIColor.black.cgColor
         containerView.layer.shadowOpacity = 0.3
         containerView.layer.shadowOffset = CGSize(width: 0, height: 4)
         containerView.layer.shadowRadius = 8
-        containerView.translatesAutoresizingMaskIntoConstraints = false
         containerView.alpha = 0
         containerView.accessibilityViewIsModal = true
 
@@ -87,11 +86,17 @@ final class CustomContextMenuViewController: UIViewController {
         containerView.addSubview(stackView)
         view.addSubview(containerView)
 
+        let trailingConstraint = stackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor)
+        trailingConstraint.priority = UILayoutPriority(999)
+
+        let bottomConstraint = stackView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+        bottomConstraint.priority = UILayoutPriority(999)
+
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: containerView.topAnchor),
             stackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            stackView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+            trailingConstraint,
+            bottomConstraint
         ])
 
         backgroundTapGesture = UITapGestureRecognizer(target: self, action: #selector(handleBackgroundTap))
@@ -204,8 +209,8 @@ final class CustomContextMenuViewController: UIViewController {
 
         NSLayoutConstraint.activate([
             hStack.topAnchor.constraint(equalTo: itemView.topAnchor, constant: 12),
-            hStack.leadingAnchor.constraint(equalTo: itemView.leadingAnchor, constant: 16),
-            hStack.trailingAnchor.constraint(equalTo: itemView.trailingAnchor, constant: -16),
+            hStack.leadingAnchor.constraint(equalTo: itemView.leadingAnchor, constant: 12),
+            hStack.trailingAnchor.constraint(equalTo: itemView.trailingAnchor, constant: -12),
             hStack.bottomAnchor.constraint(equalTo: itemView.bottomAnchor, constant: -12),
             itemView.heightAnchor.constraint(greaterThanOrEqualToConstant: 44)
         ])
@@ -215,9 +220,9 @@ final class CustomContextMenuViewController: UIViewController {
 
     private func createSeparator() -> UIView {
         let separator = UIView()
-        separator.backgroundColor = .gray
+        separator.backgroundColor = UIColor(red: 0.43, green: 0.43, blue: 0.44, alpha: 1.00)
         separator.translatesAutoresizingMaskIntoConstraints = false
-        separator.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        separator.heightAnchor.constraint(equalToConstant: 0.3).isActive = true
         return separator
     }
 
@@ -276,10 +281,12 @@ final class CustomContextMenuViewController: UIViewController {
     ///
     /// Result is clamped to **200–350 pt**.
     private func calculateAutoWidth() -> CGFloat {
+        guard case .auto(let minWidth) = configuration.widthMode else { return 0 }
+
         var maxWidth: CGFloat = 0
 
         for item in configuration.items {
-            var itemWidth: CGFloat = 32 // hStack leading(16) + trailing(16)
+            var itemWidth: CGFloat = 24 // hStack leading(12) + trailing(12)
 
             if item.badge != nil {
                 itemWidth += 24 + 12 // badge width + hStack.spacing
@@ -314,7 +321,7 @@ final class CustomContextMenuViewController: UIViewController {
             maxWidth = max(maxWidth, itemWidth)
         }
 
-        return max(200, min(ceil(maxWidth), 350))
+        return max(minWidth, min(ceil(maxWidth), 350))
     }
 
     // MARK: - Actions

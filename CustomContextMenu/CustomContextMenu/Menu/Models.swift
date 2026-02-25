@@ -10,7 +10,7 @@ import UIKit
 // MARK: - Width Mode
 
 enum ContextMenuWidthMode {
-    case auto
+    case auto(minWidth: CGFloat = 260)
     case fixed(CGFloat)
 
     var defaultWidth: CGFloat {
@@ -85,7 +85,7 @@ struct ContextMenuConfiguration {
         items: [ContextMenuItem],
         sourceRect: CGRect,
         sourceView: UIView,
-        widthMode: ContextMenuWidthMode = .fixed(250)
+        widthMode: ContextMenuWidthMode = .fixed(260)
     ) {
         self.items = items
         self.sourceRect = sourceRect

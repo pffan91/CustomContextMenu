@@ -137,7 +137,7 @@ class ViewController: UIViewController {
                 items: items,
                 sourceRect: cellRect,
                 sourceView: self.tableView,
-                widthMode: .auto
+                widthMode: .auto()
             )
         }
     }
@@ -154,7 +154,7 @@ class ViewController: UIViewController {
                     statusText: video.isReady ? "Ready" : "Pending",
                     statusColor: video.isReady ? ContextMenuBadge.ready.color : ContextMenuBadge.pending.color,
                     detail: video.formattedSize,
-                    detailColor: .systemGray,
+                    detailColor: UIColor(red: 0.53, green: 0.54, blue: 0.58, alpha: 1.00),
                     action: { [weak self] in
                         self?.downloadFile(video)
                     }
@@ -170,7 +170,7 @@ class ViewController: UIViewController {
                 items: items,
                 sourceRect: CGRect(origin: location, size: .zero),
                 sourceView: self.regularContainerView,
-                widthMode: .auto
+                widthMode: .auto()
             )
         }
     }
